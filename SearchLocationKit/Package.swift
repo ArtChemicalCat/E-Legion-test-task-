@@ -12,6 +12,8 @@ let package = Package(
             name: "Common", targets: ["Common"]),
         .library(
             name: "Models", targets: ["Models"]),
+        .library(
+            name: "LocationManager", targets: ["LocationManager"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -26,5 +28,8 @@ let package = Package(
         .target(
             name: "Models",
             dependencies: []),
+        .target(
+            name: "LocationManager",
+            dependencies: ["Common", "Models"]),
     ]
 )
