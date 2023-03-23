@@ -1,4 +1,4 @@
-public struct Coordinate {
+public struct Coordinate: Equatable {
     public let longitude: Double
     public let latitude: Double
     

@@ -1,20 +1,18 @@
 import CoreLocation
 import Common
 import Models
-import class Combine.CurrentValueSubject
 
 public class LocationManager: NSObject, CLLocationManagerDelegate {
     // MARK: - Properties
-    public typealias LocationPublisher = CurrentValueSubject<Coordinate, Never>
-    public let shared = LocationManager()
-    
     private lazy var manager = CLLocationManager()
         .with {
             $0.requestWhenInUseAuthorization()
             $0.delegate = self
         }
     
-    public let currentLocation = LocationPublisher(.zero)
+    @Published
+    public private(set) var currentLocation: Coordinate?
+    public static let shared = LocationManager()
     
     // MARK: - Initialiser
     public override init() {
@@ -25,11 +23,9 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
     // MARK: - CLLocationManagerDelegate
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
-        currentLocation.send(
-            Coordinate(
-                longitude: location.coordinate.longitude,
-                latitude: location.coordinate.latitude
-            )
+        currentLocation = Coordinate(
+            longitude: location.coordinate.longitude,
+            latitude: location.coordinate.latitude
         )
     }
 }

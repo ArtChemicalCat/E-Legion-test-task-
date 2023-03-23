@@ -14,6 +14,8 @@ let package = Package(
             name: "Models", targets: ["Models"]),
         .library(
             name: "LocationManager", targets: ["LocationManager"]),
+        .library(
+            name: "SearchUserService", targets: ["SearchUserService"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -31,5 +33,8 @@ let package = Package(
         .target(
             name: "LocationManager",
             dependencies: ["Common", "Models"]),
+        .target(
+            name: "SearchUserService",
+            dependencies: ["Common", "Models", "LocationManager"]),
     ]
 )
