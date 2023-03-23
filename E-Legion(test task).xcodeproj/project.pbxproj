@@ -15,6 +15,7 @@
 		2447F99929CC5E6B0085013D /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F99829CC5E6B0085013D /* Common */; };
 		2447F99C29CCB4E10085013D /* Models in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F99B29CCB4E10085013D /* Models */; };
 		2447F99E29CCB5EA0085013D /* LocationManager in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F99D29CCB5EA0085013D /* LocationManager */; };
+		2447F9A129CCC5040085013D /* SearchFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F9A029CCC5040085013D /* SearchFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		2447F98D29CC560B0085013D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2447F98F29CC560B0085013D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2447F99A29CCB3870085013D /* SearchLocationKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SearchLocationKit; sourceTree = "<group>"; };
+		2447F99F29CCC40C0085013D /* Features */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Features; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +38,7 @@
 				2447F99C29CCB4E10085013D /* Models in Frameworks */,
 				2447F99929CC5E6B0085013D /* Common in Frameworks */,
 				2447F99E29CCB5EA0085013D /* LocationManager in Frameworks */,
+				2447F9A129CCC5040085013D /* SearchFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,6 +48,7 @@
 		2447F97529CC56080085013D = {
 			isa = PBXGroup;
 			children = (
+				2447F99F29CCC40C0085013D /* Features */,
 				2447F99A29CCB3870085013D /* SearchLocationKit */,
 				2447F98029CC56080085013D /* E-Legion(test task) */,
 				2447F97F29CC56080085013D /* Products */,
@@ -100,6 +104,7 @@
 				2447F99829CC5E6B0085013D /* Common */,
 				2447F99B29CCB4E10085013D /* Models */,
 				2447F99D29CCB5EA0085013D /* LocationManager */,
+				2447F9A029CCC5040085013D /* SearchFeature */,
 			);
 			productName = "E-Legion(test task)";
 			productReference = 2447F97E29CC56080085013D /* E-Legion(test task).app */;
@@ -378,6 +383,10 @@
 		2447F99D29CCB5EA0085013D /* LocationManager */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LocationManager;
+		};
+		2447F9A029CCC5040085013D /* SearchFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SearchFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
