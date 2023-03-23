@@ -12,6 +12,7 @@
 		2447F98629CC56080085013D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2447F98529CC56080085013D /* ViewController.swift */; };
 		2447F98B29CC560B0085013D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2447F98A29CC560B0085013D /* Assets.xcassets */; };
 		2447F98E29CC560B0085013D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2447F98C29CC560B0085013D /* LaunchScreen.storyboard */; };
+		2447F99929CC5E6B0085013D /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F99829CC5E6B0085013D /* Common */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2447F99929CC5E6B0085013D /* Common in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +44,7 @@
 				2447F99629CC57D20085013D /* UtilityKit */,
 				2447F98029CC56080085013D /* E-Legion(test task) */,
 				2447F97F29CC56080085013D /* Products */,
+				2447F99729CC5E6B0085013D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -66,6 +69,13 @@
 			path = "E-Legion(test task)";
 			sourceTree = "<group>";
 		};
+		2447F99729CC5E6B0085013D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -82,6 +92,9 @@
 			dependencies = (
 			);
 			name = "E-Legion(test task)";
+			packageProductDependencies = (
+				2447F99829CC5E6B0085013D /* Common */,
+			);
 			productName = "E-Legion(test task)";
 			productReference = 2447F97E29CC56080085013D /* E-Legion(test task).app */;
 			productType = "com.apple.product-type.application";
@@ -346,6 +359,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2447F99829CC5E6B0085013D /* Common */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Common;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2447F97629CC56080085013D /* Project object */;
 }

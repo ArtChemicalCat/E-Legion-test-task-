@@ -1,21 +1,22 @@
-protocol WithObject {}
+import Foundation
 
-extension AnyObject: WithObject {}
-extension WithObject: AnyObject {
+public protocol WithObject {}
+public protocol WithValue {}
+
+public extension WithObject {
+    @discardableResult
     func with(_ block: (Self) -> Void) -> Self {
         block(self)
         return self
     }
 }
 
-protocol WithValue {}
-extension WithValue {
-    func with(_ block: (Self) -> Void) -> Self {
+public extension WithValue {
+    func with(_ block: (inout Self) -> Void) -> Self {
         var mutated = self
-        with(block)
-    }
-    
-    func with(_ block: (inout Self) -> Void) {
-        block(&self)
+        block(&mutated)
+        return mutated
     }
 }
+
+extension NSObject: WithObject { }
