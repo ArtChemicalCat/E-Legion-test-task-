@@ -22,6 +22,7 @@
 		2447F98A29CC560B0085013D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2447F98D29CC560B0085013D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2447F98F29CC560B0085013D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2447F99629CC57D20085013D /* UtilityKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UtilityKit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +39,7 @@
 		2447F97529CC56080085013D = {
 			isa = PBXGroup;
 			children = (
+				2447F99629CC57D20085013D /* UtilityKit */,
 				2447F98029CC56080085013D /* E-Legion(test task) */,
 				2447F97F29CC56080085013D /* Products */,
 			);
