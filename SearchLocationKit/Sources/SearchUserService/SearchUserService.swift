@@ -4,43 +4,51 @@ import LocationManager
 import Models
 
 public protocol SearchUserServiceProtocol {
-    func requestUserLocations() -> AnyPublisher<[User], Never>
+    func requestUserLocations() -> AnyPublisher<[User], Error>
 }
 
 public final class SearchUserService: SearchUserServiceProtocol {
-    @Published private var users: [User]?
-
-    private let timerPublisher = Timer.TimerPublisher(
-        interval: 3,
-        tolerance: 0.1,
-        runLoop: .current,
-        mode: .default
-    )
+    private var users = CurrentValueSubject<[User], Error>([])
+    private var subscriptions = Set<AnyCancellable>()
+    private var timer: Timer?
+    public init() {}
     
-    public func requestUserLocations() -> AnyPublisher<[User], Never> {
-        let getRandomUsers = RandomUserLoader()
-        getRandomUsers()
-            .map(Optional.some)
-            .assign(to: &$users)
-        
-        return timerPublisher
-            .combineLatest($users)
-            .compactMap(\.1)
-            .map { $0.randomlyShiftCoordinates() }
+    public func requestUserLocations() -> AnyPublisher<[User], Error> {
+        startTimer()
+        requestUsers()
+
+        return users
             .eraseToAnyPublisher()
     }
     
-    // MARK: - Helper Functions
-    private func getRandomLocation(relativeTo coordinate: Coordinate) -> Coordinate {
-        Coordinate(
-            longitude: coordinate.longitude + Double.random(in: -0.1...0.1),
-            latitude: coordinate.latitude + Double.random(in: -0.1...0.1)
-        )
+    private func startTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(
+            withTimeInterval: 3,
+            repeats: true) { [unowned self] timer in
+                let updatedUsers = users.value.withRandomlyShiftedCoordinates()
+                users.send(updatedUsers)
+            }
+    }
+    
+    private func requestUsers() {
+        let getRandomUsers = RandomUserLoader()
+        getRandomUsers()
+            .sink(
+                receiveCompletion: { [weak self] in
+                    if case .failure(let error) = $0 {
+                        self?.users.send(completion: .failure(error))
+                    }
+                },
+                receiveValue: { [weak self] in
+                    self?.users.send($0) }
+            )
+            .store(in: &subscriptions)
     }
 }
 
 private extension Array where Element == User {
-    func randomlyShiftCoordinates() -> [User] {
+    func withRandomlyShiftedCoordinates() -> [User] {
         map { User(
             name: $0.name,
             avatarURL: $0.avatarURL,

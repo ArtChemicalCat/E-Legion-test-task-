@@ -7,6 +7,7 @@
 
 import UIKit
 import Common
+import SearchFeature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -18,9 +19,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        let searchViewModel = SearchUsersViewModel()
+        let rootVC = SearchUsersViewController(viewModel: searchViewModel)
+        
         window = UIWindow(windowScene: windowScene)
             .with {
-                $0.rootViewController = UIViewController()
+                $0.rootViewController = rootVC
                 $0.makeKeyAndVisible()
             }
     }

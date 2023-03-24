@@ -1,16 +1,17 @@
-import Foundation
+import Combine
 import SearchUserService
 import Models
 
 public final class SearchUsersViewModel {
     // MARK: - Properties
     private let userLocationsService: SearchUserServiceProtocol
+    private var subscriptions = Set<AnyCancellable>()
     
     @Published private(set) var selectedUser: User?
     @Published private(set) var users = [User]()
-    
+
     // MARK: - Initialiser
-    public init(userLocationsService: SearchUserServiceProtocol) {
+    public init(userLocationsService: SearchUserServiceProtocol = SearchUserService()) {
         self.userLocationsService = userLocationsService
     }
     
@@ -18,7 +19,15 @@ public final class SearchUsersViewModel {
     func startRequestingUserLocations() {
         userLocationsService
             .requestUserLocations()
-            .assign(to: &$users)
+            .sink(
+                receiveCompletion: {
+                    print($0)
+                },
+                receiveValue: {
+                    print($0)
+                }
+            )
+            .store(in: &subscriptions)
     }
     
     func select(user: User) {
