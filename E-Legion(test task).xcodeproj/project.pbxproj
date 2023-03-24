@@ -16,6 +16,7 @@
 		2447F99C29CCB4E10085013D /* Models in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F99B29CCB4E10085013D /* Models */; };
 		2447F99E29CCB5EA0085013D /* LocationManager in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F99D29CCB5EA0085013D /* LocationManager */; };
 		2447F9A129CCC5040085013D /* SearchFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F9A029CCC5040085013D /* SearchFeature */; };
+		2447F9A329CD794D0085013D /* SearchUserService in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F9A229CD794D0085013D /* SearchUserService */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2447F9A329CD794D0085013D /* SearchUserService in Frameworks */,
 				2447F99C29CCB4E10085013D /* Models in Frameworks */,
 				2447F99929CC5E6B0085013D /* Common in Frameworks */,
 				2447F99E29CCB5EA0085013D /* LocationManager in Frameworks */,
@@ -105,6 +107,7 @@
 				2447F99B29CCB4E10085013D /* Models */,
 				2447F99D29CCB5EA0085013D /* LocationManager */,
 				2447F9A029CCC5040085013D /* SearchFeature */,
+				2447F9A229CD794D0085013D /* SearchUserService */,
 			);
 			productName = "E-Legion(test task)";
 			productReference = 2447F97E29CC56080085013D /* E-Legion(test task).app */;
@@ -387,6 +390,10 @@
 		2447F9A029CCC5040085013D /* SearchFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SearchFeature;
+		};
+		2447F9A229CD794D0085013D /* SearchUserService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SearchUserService;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -13,6 +13,7 @@ let package = Package(
             targets: ["SearchFeature"]),
     ],
     dependencies: [
+        .package(path: "SearchLocationKit")
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
@@ -21,6 +22,9 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "SearchFeature",
-            dependencies: []),
+            dependencies: [
+                .product(name: "SearchUserService", package: "SearchLocationKit"),
+                .product(name: "Models", package: "SearchLocationKit")
+            ]),
     ]
 )
