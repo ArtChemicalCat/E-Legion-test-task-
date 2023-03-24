@@ -17,6 +17,7 @@
 		2447F99E29CCB5EA0085013D /* LocationManager in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F99D29CCB5EA0085013D /* LocationManager */; };
 		2447F9A129CCC5040085013D /* SearchFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F9A029CCC5040085013D /* SearchFeature */; };
 		2447F9A329CD794D0085013D /* SearchUserService in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F9A229CD794D0085013D /* SearchUserService */; };
+		2447F9A529CD8AFD0085013D /* CommonUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F9A429CD8AFD0085013D /* CommonUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 				2447F9A329CD794D0085013D /* SearchUserService in Frameworks */,
 				2447F99C29CCB4E10085013D /* Models in Frameworks */,
 				2447F99929CC5E6B0085013D /* Common in Frameworks */,
+				2447F9A529CD8AFD0085013D /* CommonUI in Frameworks */,
 				2447F99E29CCB5EA0085013D /* LocationManager in Frameworks */,
 				2447F9A129CCC5040085013D /* SearchFeature in Frameworks */,
 			);
@@ -108,6 +110,7 @@
 				2447F99D29CCB5EA0085013D /* LocationManager */,
 				2447F9A029CCC5040085013D /* SearchFeature */,
 				2447F9A229CD794D0085013D /* SearchUserService */,
+				2447F9A429CD8AFD0085013D /* CommonUI */,
 			);
 			productName = "E-Legion(test task)";
 			productReference = 2447F97E29CC56080085013D /* E-Legion(test task).app */;
@@ -394,6 +397,10 @@
 		2447F9A229CD794D0085013D /* SearchUserService */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SearchUserService;
+		};
+		2447F9A429CD8AFD0085013D /* CommonUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CommonUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
