@@ -6,4 +6,8 @@ public extension UIView {
     func withBackgroundColor(_ color: UIColor) -> Self {
         with { $0.backgroundColor = color }
     }
+    
+    func addSubviews(_ views: UIView...) {
+        views.forEach { addSubview($0) }
+    }
 }

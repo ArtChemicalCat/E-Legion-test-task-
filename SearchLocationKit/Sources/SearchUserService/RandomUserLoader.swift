@@ -21,7 +21,7 @@ struct RandomUserLoader {
                 }
                 
                 struct ID: Decodable {
-                    let value: String
+                    let value: String?
                 }
                 
                 struct Avatar: Decodable {
@@ -46,18 +46,20 @@ struct RandomUserLoader {
             .map(\.data)
             .decode(type: Result.self, decoder: JSONDecoder())
             .map(\.results)
-            .map {
-                $0.map {
-                    Models.User(
-                        name: $0.name.full,
-                        id: $0.id.value,
-                        avatarURL: $0.picture.thumbnail,
-                        coordinate: Coordinate(
-                            longitude: Double($0.location.coordinates.longitude) ?? 0,
-                            latitude: Double($0.location.coordinates.longitude) ?? 0
+            .map { users in
+                users
+                    .filter { $0.id.value != nil }
+                    .map { user in
+                        Models.User(
+                            name: user.name.full,
+                            id: user.id.value ?? "",
+                            avatarURL: user.picture.thumbnail,
+                            coordinate: Coordinate(
+                                longitude: Double(user.location.coordinates.longitude) ?? 0,
+                                latitude: Double(user.location.coordinates.longitude) ?? 0
+                            )
                         )
-                    )
-                }
+                    }
             }
             .eraseToAnyPublisher()
     }

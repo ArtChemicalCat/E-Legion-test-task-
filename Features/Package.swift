@@ -24,7 +24,9 @@ let package = Package(
             name: "SearchFeature",
             dependencies: [
                 .product(name: "SearchUserService", package: "SearchLocationKit"),
-                .product(name: "Models", package: "SearchLocationKit")
+                .product(name: "Models", package: "SearchLocationKit"),
+                .product(name: "Common", package: "SearchLocationKit"),
+                .product(name: "CommonUI", package: "SearchLocationKit")
             ]),
     ]
 )

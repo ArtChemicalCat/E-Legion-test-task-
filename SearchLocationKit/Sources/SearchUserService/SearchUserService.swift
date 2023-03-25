@@ -9,8 +9,11 @@ public protocol SearchUserServiceProtocol {
 
 public final class SearchUserService: SearchUserServiceProtocol {
     private var users = CurrentValueSubject<[User], Error>([])
-    private var subscriptions = Set<AnyCancellable>()
+
+    private let getRandomUsers = RandomUserLoader()
     private var timer: Timer?
+    private var subscriptions = Set<AnyCancellable>()
+    
     public init() {}
     
     public func requestUserLocations() -> AnyPublisher<[User], Error> {
@@ -32,7 +35,6 @@ public final class SearchUserService: SearchUserServiceProtocol {
     }
     
     private func requestUsers() {
-        let getRandomUsers = RandomUserLoader()
         getRandomUsers()
             .sink(
                 receiveCompletion: { [weak self] in

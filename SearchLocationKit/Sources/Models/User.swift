@@ -1,6 +1,7 @@
 import struct Foundation.URL
+import struct Foundation.UUID
 
-public struct User {
+public struct User: Identifiable {
     public let name: String
     public let id: String
     public let avatarURL: URL?
