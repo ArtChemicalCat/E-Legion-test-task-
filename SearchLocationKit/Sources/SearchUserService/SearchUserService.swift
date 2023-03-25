@@ -51,14 +51,16 @@ public final class SearchUserService: SearchUserServiceProtocol {
 
 private extension Array where Element == User {
     func withRandomlyShiftedCoordinates() -> [User] {
-        map { User(
-            name: $0.name,
-            id: $0.id,
-            avatarURL: $0.avatarURL,
-            coordinate: Coordinate(
-                longitude: $0.coordinate.longitude + Double.random(in: -0.1...0.1),
-                latitude: $0.coordinate.latitude + Double.random(in: -0.1...0.1)
+        map {
+            User(
+                name: $0.name,
+                id: $0.id,
+                avatarURL: $0.avatarURL,
+                coordinate: Coordinate(
+                    longitude: $0.coordinate.longitude + Double.random(in: -0.001...0.001),
+                    latitude: $0.coordinate.latitude + Double.random(in: -0.001...0.001)
+                )
             )
-        )  }
+        }
     }
 }

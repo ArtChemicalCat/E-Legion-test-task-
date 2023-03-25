@@ -30,8 +30,9 @@ public final class SearchUsersViewController: UIViewController {
     required init?(coder: NSCoder) { fatalError() }
     
     public override func loadView() {
-        view = SearchUsersRootView(userProvider: { [weak self] in
-            self?.viewModel.user(withID: $0)
-        })
+        view = SearchUsersRootView(
+            dataProvider: { [weak viewModel] in viewModel?.provideData(for: $0) },
+            onSelectUser: { [weak viewModel] in viewModel?.selectUser(id: $0) }
+        )
     }
 }

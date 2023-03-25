@@ -9,11 +9,14 @@ final class SearchUsersRootView: UIView {
     typealias DataSource = UITableViewDiffableDataSource<Section, User.ID>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, User.ID>
     
-    typealias UserProvider = (User.ID) -> User?
+    typealias UserDataProvider = (User.ID) -> (user: User, distance: String)?
     
     // MARK: - Views
     private lazy var tableView = UITableView()
         .with {
+            $0.allowsMultipleSelection = false
+            $0.separatorColor = .clear
+            $0.delegate = self
             $0.backgroundColor = .clear
             $0.rowHeight = UITableView.automaticDimension
             $0.register(UserCell.self)
@@ -21,11 +24,16 @@ final class SearchUsersRootView: UIView {
 
     // MARK: - Properties
     private lazy var dataSource = makeDataSource()
-    private let getUser: UserProvider
+    private let provideData: UserDataProvider
+    private let onSelectUser: (User.ID?) -> Void
     
     // MARK: - Initialiser
-    init(userProvider: @escaping UserProvider) {
-        self.getUser = userProvider
+    init(
+        dataProvider: @escaping UserDataProvider,
+        onSelectUser: @escaping (User.ID?) -> Void
+    ) {
+        self.provideData = dataProvider
+        self.onSelectUser = onSelectUser
         super.init(frame: .zero)
         makeLayout()
         backgroundColor = .systemBackground
@@ -39,38 +47,21 @@ final class SearchUsersRootView: UIView {
     func applySnapshot(_ snapshot: Snapshot) {
         dataSource.apply(snapshot)
     }
-    
-//    func configure(with users: [User]) {
-//        guard !users.isEmpty else { return }
-//        var snapshot =  dataSource.snapshot()
-//        if snapshot.sectionIdentifiers.isEmpty {
-//            snapshot.appendSections([.main])
-//        }
-//        
-//        let presentedUsers = snapshot.itemIdentifiers
-//        let usersToUpdate = users.filter { user in
-//            presentedUsers.contains(where: { $0.id == user.id })
-//        }
-//        let newUsers = users.filter { user in
-//            !presentedUsers.contains(where: { $0.id == user.id })
-//        }
-//        
-//        dataSource.apply(
-//            snapshot
-//                .with {
-//                    $0.reloadItems(usersToUpdate)
-//                    $0.appendItems(newUsers, toSection: .main)
-//                }
-//        )
-//    }
-    
+
     // MARK: - DataSource
     private func makeDataSource() -> DataSource {
         DataSource(
             tableView: tableView,
             cellProvider: { [unowned self] tableView, indexPath, identifier in
                 let cell: UserCell = tableView.dequeueCell(for: indexPath)
-                cell.user = getUser(identifier)
+                
+                if let data = provideData(identifier) {
+                    let viewModel = UserCell.ViewModel(
+                        userName: data.user.name,
+                        distance: data.distance
+                    )
+                    cell.accept(viewModel: viewModel)
+                }
                 return cell
             }
         )
@@ -80,6 +71,27 @@ final class SearchUsersRootView: UIView {
     private func makeLayout() {
         addSubview(tableView)
         tableView.pin(to: layoutMarginsGuide)
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension SearchUsersRootView: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        guard let cell = tableView.cellForRow(at: indexPath) else { return nil }
+        if cell.isSelected {
+            tableView.deselectRow(at: indexPath, animated: true)
+            onSelectUser(nil)
+            return nil
+        } else {
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+            let selectedID = dataSource.itemIdentifier(for: indexPath)
+            onSelectUser(selectedID)
+            return indexPath
+        }
+
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     }
 }
 

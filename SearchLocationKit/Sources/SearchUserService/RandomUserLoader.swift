@@ -3,45 +3,45 @@ import Models
 import struct Combine.AnyPublisher
 
 struct RandomUserLoader {
-    private func getRandomUsers(count: Int) -> AnyPublisher<[User], Error> {
-        struct Result: Decodable {
-            let results: [User]
-    
-            struct User: Decodable {
-                let name: Name
-                let id: ID
-                let picture: Avatar
-                let location: Location
+    private struct Result: Decodable {
+        let results: [User]
+        
+        struct User: Decodable {
+            let name: Name
+            let id: ID
+            let picture: Avatar
+            let location: Location
+            
+            struct Name: Decodable {
+                let first: String
+                let last: String
                 
-                struct Name: Decodable {
-                    let first: String
-                    let last: String
-                    
-                    var full: String { first + " " + last }
-                }
+                var full: String { first + " " + last }
+            }
+            
+            struct ID: Decodable {
+                let value: String?
+            }
+            
+            struct Avatar: Decodable {
+                let large: URL
+                let medium: URL
+                let thumbnail: URL
+            }
+            
+            struct Location: Decodable {
+                let coordinates: Coordinates
                 
-                struct ID: Decodable {
-                    let value: String?
-                }
-                
-                struct Avatar: Decodable {
-                    let large: URL
-                    let medium: URL
-                    let thumbnail: URL
-                }
-                
-                struct Location: Decodable {
-                    let coordinates: Coordinates
-                    
-                    struct Coordinates: Decodable {
-                        let latitude: String
-                        let longitude: String
-                    }
+                struct Coordinates: Decodable {
+                    let latitude: String
+                    let longitude: String
                 }
             }
         }
-        
-        return URLSession.shared
+    }
+    
+    private func getRandomUsers(count: Int) -> AnyPublisher<[User], Error> {
+        URLSession.shared
             .dataTaskPublisher(for: .randomUsers(count))
             .map(\.data)
             .decode(type: Result.self, decoder: JSONDecoder())
@@ -56,7 +56,7 @@ struct RandomUserLoader {
                             avatarURL: user.picture.thumbnail,
                             coordinate: Coordinate(
                                 longitude: Double(user.location.coordinates.longitude) ?? 0,
-                                latitude: Double(user.location.coordinates.longitude) ?? 0
+                                latitude: Double(user.location.coordinates.latitude) ?? 0
                             )
                         )
                     }
