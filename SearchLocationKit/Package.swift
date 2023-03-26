@@ -18,6 +18,8 @@ let package = Package(
             name: "SearchUserService", targets: ["SearchUserService"]),
         .library(
             name: "CommonUI", targets: ["CommonUI"]),
+        .library(
+            name: "Cache", targets: ["Cache"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -31,7 +33,7 @@ let package = Package(
             dependencies: []),
         .target(
             name: "Models",
-            dependencies: []),
+            dependencies: ["Common"]),
         .target(
             name: "LocationManager",
             dependencies: ["Common", "Models"]),
@@ -40,6 +42,9 @@ let package = Package(
             dependencies: ["Common", "Models", "LocationManager"]),
         .target(
             name: "CommonUI",
-            dependencies: ["Common"]),
+            dependencies: ["Common", "Cache"]),
+        .target(
+            name: "Cache",
+            dependencies: []),
     ]
 )

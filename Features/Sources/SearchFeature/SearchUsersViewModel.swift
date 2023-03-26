@@ -11,6 +11,10 @@ public final class SearchUsersViewModel {
     private var subscriptions = Set<AnyCancellable>()
 
     private let distanceFormatter = LengthFormatter()
+        .with {
+            $0.numberFormatter.maximumFractionDigits = .zero
+            $0.numberFormatter.groupingSeparator = " "
+        }
     
     private var currentLocation: Coordinate?
     private var users = [User.ID: User]()
@@ -34,9 +38,11 @@ public final class SearchUsersViewModel {
                     print($0)
                 },
                 receiveValue: { [weak self] in
-                    $0.forEach {
-                        self?.users[$0.id] = $0
+                    self?.users = $0.reduce(into: [:]) {
+                        guard $1.id != (self?.selectedUser?.id ?? "") else { return }
+                        $0[$1.id] = $1
                     }
+                    
                     self?.updateSnapshot(with: $0)
                 }
             )
@@ -44,8 +50,34 @@ public final class SearchUsersViewModel {
     }
     
     func selectUser(id: User.ID?) {
-        selectedUser = id == nil ? nil : users[id!]
-        snapshot.reconfigureItems(users.map(\.key))
+        switch (id, selectedUser) {
+        case let (id?, unselected?):
+            snapshot.deleteItems([id])
+            snapshot.appendItems([unselected.id])
+            users[unselected.id] = unselected
+            selectedUser = users[id]
+            users[id] = nil
+        case let (id?, nil):
+            snapshot.deleteItems([id])
+            selectedUser = users[id]
+            users[id] = nil
+        case let (nil, unselected?):
+            snapshot.appendItems([unselected.id])
+            users[unselected.id] = unselected
+            selectedUser = nil
+        default: break
+        }
+
+        snapshot = .init().with {
+            $0.appendSections([.main])
+            $0.appendItems(
+                users
+                    .map(\.value)
+                    .sortedByDistance(to: selectedUser?.coordinate ?? currentLocation)
+                    .map(\.id),
+                toSection: .main
+            )
+        }
     }
     
     func provideData(for id: User.ID) -> (user: User, distance: String)? {
@@ -79,9 +111,23 @@ public final class SearchUsersViewModel {
     
     private func updateSnapshot(with users: [User]) {
         let presentedUserIDs = snapshot.itemIdentifiers
-        let newUserIDs = Set(users.map(\.id)).subtracting(presentedUserIDs)
+        let newUserIDs = Set(
+            users
+                .sortedByDistance(to: selectedUser?.coordinate ?? currentLocation)
+                .filter { $0.id != (selectedUser?.id ?? "") }
+                .map(\.id)
+        ).subtracting(presentedUserIDs)
         
         snapshot.appendItems(Array(newUserIDs), toSection: .main)
         snapshot.reconfigureItems(presentedUserIDs)
+    }
+}
+
+extension Array where Element == User {
+    func sortedByDistance(to location: Coordinate?) -> Self {
+        guard let location else { return self }
+        return sorted {
+            $0.coordinate.distance(to: location) < $1.coordinate.distance(to: location)
+        }
     }
 }

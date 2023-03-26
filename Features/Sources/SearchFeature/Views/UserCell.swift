@@ -8,6 +8,10 @@ final class UserCell: UITableViewCell {
         let distance: String
     }
     // MARK: - Views
+    private let roundedRect = UIView()
+        .withBackgroundColor(.systemGray5)
+        .with { $0.layer.cornerRadius = 12 }
+    
     private let nameLabel = UILabel()
         .withTextStyle(.title2)
     
@@ -34,21 +38,26 @@ final class UserCell: UITableViewCell {
     // MARK: - UI Setup
     private func configureBackground() {
         selectedBackgroundView = UIView()
-            .with {
-                $0.layer.cornerRadius = 12
-                $0.backgroundColor = .systemMint
-            }
-        layer.cornerRadius = 12
+            .withBackgroundColor(.clear)
         backgroundColor = .clear
     }
     
     private func makeLayout() {
-        contentView.addSubviews(nameLabel, distanceLabel)
+        contentView.addSubviews(roundedRect, nameLabel, distanceLabel)
         contentView.layoutMargins = .init(top: 12, left: 12, bottom: 12, right: 12)
+        let rectContainer = UILayoutGuide()
+        contentView.addLayoutGuide(rectContainer)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         distanceLabel.translatesAutoresizingMaskIntoConstraints = false
+        roundedRect.translatesAutoresizingMaskIntoConstraints = false
 
+        roundedRect.pin(to: rectContainer, insets: .init(top: 8, left: 8, bottom: 8, right: 8))
         makeConstraints(inContainer: contentView.layoutMarginsGuide) {
+            rectContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
+            rectContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            rectContainer.topAnchor.constraint(equalTo: contentView.topAnchor)
+            rectContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+
             nameLabel.topAnchor.constraint(equalTo: $0.topAnchor)
             nameLabel.leadingAnchor.constraint(equalTo: $0.leadingAnchor)
             nameLabel.trailingAnchor.constraint(equalTo: $0.trailingAnchor)

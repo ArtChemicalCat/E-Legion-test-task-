@@ -30,6 +30,9 @@ struct RandomUserLoader {
             }
             
             struct Location: Decodable {
+                let city: String
+                let state: String
+                let country: String
                 let coordinates: Coordinates
                 
                 struct Coordinates: Decodable {
@@ -57,7 +60,8 @@ struct RandomUserLoader {
                             coordinate: Coordinate(
                                 longitude: Double(user.location.coordinates.longitude) ?? 0,
                                 latitude: Double(user.location.coordinates.latitude) ?? 0
-                            )
+                            ),
+                            locationName: [user.location.city, user.location.state, user.location.country].joined(separator: ", ")
                         )
                     }
             }

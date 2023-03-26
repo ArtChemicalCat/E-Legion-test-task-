@@ -59,7 +59,8 @@ private extension Array where Element == User {
                 coordinate: Coordinate(
                     longitude: $0.coordinate.longitude + Double.random(in: -0.001...0.001),
                     latitude: $0.coordinate.latitude + Double.random(in: -0.001...0.001)
-                )
+                ),
+                locationName: $0.locationName
             )
         }
     }

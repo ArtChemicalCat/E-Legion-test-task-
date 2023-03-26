@@ -18,6 +18,7 @@
 		2447F9A129CCC5040085013D /* SearchFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F9A029CCC5040085013D /* SearchFeature */; };
 		2447F9A329CD794D0085013D /* SearchUserService in Frameworks */ = {isa = PBXBuildFile; productRef = 2447F9A229CD794D0085013D /* SearchUserService */; };
 		24D7BFA129CD8FD100834E6B /* CommonUI in Frameworks */ = {isa = PBXBuildFile; productRef = 24D7BFA029CD8FD100834E6B /* CommonUI */; };
+		24F3C93529D047BB0099D0C5 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 24F3C93429D047BB0099D0C5 /* Cache */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2447F9A329CD794D0085013D /* SearchUserService in Frameworks */,
+				24F3C93529D047BB0099D0C5 /* Cache in Frameworks */,
 				2447F99C29CCB4E10085013D /* Models in Frameworks */,
 				2447F99929CC5E6B0085013D /* Common in Frameworks */,
 				24D7BFA129CD8FD100834E6B /* CommonUI in Frameworks */,
@@ -111,6 +113,7 @@
 				2447F9A029CCC5040085013D /* SearchFeature */,
 				2447F9A229CD794D0085013D /* SearchUserService */,
 				24D7BFA029CD8FD100834E6B /* CommonUI */,
+				24F3C93429D047BB0099D0C5 /* Cache */,
 			);
 			productName = "E-Legion(test task)";
 			productReference = 2447F97E29CC56080085013D /* E-Legion(test task).app */;
@@ -401,6 +404,10 @@
 		24D7BFA029CD8FD100834E6B /* CommonUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CommonUI;
+		};
+		24F3C93429D047BB0099D0C5 /* Cache */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Cache;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
