@@ -20,6 +20,14 @@ public extension UIView {
             trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -insets.right)
         ])
     }
+    
+    @discardableResult
+    func set(width: CGFloat? = nil, height: CGFloat? = nil) -> Self {
+        if let width { widthAnchor.constraint(equalToConstant: width).isActive = true }
+        if let height { heightAnchor.constraint(equalToConstant: height).isActive = true }
+        
+        return self
+    }
 }
 
 public func makeConstraints(

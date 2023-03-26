@@ -88,6 +88,7 @@ final class SearchUsersRootView: UIView {
                 if let data = provideData(identifier) {
                     let viewModel = UserCell.ViewModel(
                         userName: data.user.name,
+                        avatarURL: data.user.avatarURL,
                         distance: data.distance
                     )
                     cell.accept(viewModel: viewModel)
