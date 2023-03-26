@@ -11,15 +11,13 @@ final class UserCell: UITableViewCell {
     // MARK: - Views
     private let roundedRect = UIView()
         .withBackgroundColor(.systemFill)
-        .with { $0.layer.cornerRadius = 12 }
+        .with { $0.layer.cornerRadius = radiusMedium }
     
     private let avatarImage = UIImageView()
-        .set(width: 60, height: 60)
+        .set(width: avatarSize, height: avatarSize)
         .with {
             $0.clipsToBounds = true
-            $0.layer.borderWidth = 1
-            $0.layer.borderColor = UIColor.systemGray3.cgColor
-            $0.layer.cornerRadius = 8
+            $0.layer.cornerRadius = radiusMedium
             $0.contentMode = .scaleAspectFill
         }
     
@@ -55,11 +53,17 @@ final class UserCell: UITableViewCell {
     }
     
     private func makeLayout() {
-        contentView.addSubviews(roundedRect, avatarImage, nameLabel, distanceLabel)
-        contentView.layoutMargins = .init(top: 12, left: 0, bottom: 12, right: 0)
         let rectContainer = UILayoutGuide()
+
+        contentView.addSubviews(roundedRect, avatarImage, nameLabel, distanceLabel)
         contentView.addLayoutGuide(rectContainer)
-        roundedRect.pin(to: rectContainer, insets: .init(top: 8, left: 0, bottom: 8, right: 0))
+        contentView.layoutMargins = .init(
+            top: oneAndHalfOffset,
+            left: 0,
+            bottom: oneAndHalfOffset,
+            right: 0
+        )
+        roundedRect.pin(to: rectContainer, insets: .init(top: singleOffset, left: 0, bottom: singleOffset, right: 0))
         
         makeConstraints(inContainer: contentView.layoutMarginsGuide) {
             rectContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
@@ -67,18 +71,21 @@ final class UserCell: UITableViewCell {
             rectContainer.topAnchor.constraint(equalTo: contentView.topAnchor)
             rectContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
 
-            avatarImage.topAnchor.constraint(equalTo: roundedRect.topAnchor, constant: 8)
-            avatarImage.leadingAnchor.constraint(equalTo: roundedRect.leadingAnchor, constant: 8)
-            avatarImage.bottomAnchor.constraint(equalTo: roundedRect.bottomAnchor, constant: -8)
+            avatarImage.topAnchor.constraint(equalTo: roundedRect.topAnchor, constant: singleOffset)
+            avatarImage.leadingAnchor.constraint(equalTo: roundedRect.leadingAnchor, constant: singleOffset)
+            avatarImage.bottomAnchor.constraint(equalTo: roundedRect.bottomAnchor, constant: -singleOffset)
                 .with { $0.priority = .defaultHigh }
             
             nameLabel.topAnchor.constraint(equalTo: $0.topAnchor)
-            nameLabel.leadingAnchor.constraint(equalTo:  avatarImage.trailingAnchor, constant: 8)
+            nameLabel.leadingAnchor.constraint(equalTo:  avatarImage.trailingAnchor, constant: singleOffset)
             nameLabel.trailingAnchor.constraint(equalTo: $0.trailingAnchor)
             
-            distanceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8)
+            distanceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: singleOffset)
             distanceLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor)
             distanceLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor)
         }
     }
 }
+
+// MARK: - Constants
+private let avatarSize = 60.0

@@ -40,7 +40,7 @@ final class YourLocationView: UIView {
             
             locationLabel.leadingAnchor.constraint(equalTo: $0.leadingAnchor)
             locationLabel.trailingAnchor.constraint(equalTo: $0.trailingAnchor)
-            locationLabel.topAnchor.constraint(equalTo: yourLocationLabel.bottomAnchor, constant: 12)
+            locationLabel.topAnchor.constraint(equalTo: yourLocationLabel.bottomAnchor, constant: oneAndHalfOffset)
             locationLabel.bottomAnchor.constraint(equalTo: $0.bottomAnchor)
         }
     }

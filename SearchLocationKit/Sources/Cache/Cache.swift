@@ -1,10 +1,12 @@
 import Foundation
 
 public final class Cache<Key: Hashable, Value> {
+    // MARK: - Properties
     private let wrapped = NSCache<WrappedKey, Entry>()
     private let currentDate: () -> Date
     private let entryLifetime: TimeInterval
     
+    // MARK: - Initialiser
     public init(
         dateProvider: @escaping () -> Date = Date.init,
         entryLifetime: TimeInterval = 12 * 60 * 60

@@ -4,18 +4,18 @@ import Models
 
 final class SelectedUserView: UIView {
     // MARK: - Views
-    let nameLabel = UILabel()
+    private let nameLabel = UILabel()
         .withTextStyle(.title1)
     
-    let locationLabel = UILabel()
+    private let locationLabel = UILabel()
         .withTextStyle(.body)
         .with { $0.numberOfLines = .zero }
     
-    let avatarImage = UIImageView()
-        .set(width: 100, height: 100)
+    private let avatarImage = UIImageView()
+        .set(width: avatarSize, height: avatarSize)
         .with {
             $0.contentMode = .scaleAspectFill
-            $0.layer.cornerRadius = 50
+            $0.layer.cornerRadius = avatarSize / 2
             $0.clipsToBounds = true
         }
     
@@ -49,12 +49,15 @@ final class SelectedUserView: UIView {
                 .with { $0.priority = .defaultHigh }
             
             nameLabel.leadingAnchor.constraint(equalTo: $0.leadingAnchor)
-            nameLabel.trailingAnchor.constraint(equalTo: avatarImage.leadingAnchor, constant: -8)
+            nameLabel.trailingAnchor.constraint(equalTo: avatarImage.leadingAnchor, constant: -singleOffset)
             nameLabel.topAnchor.constraint(equalTo: $0.topAnchor)
             
-            locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 12)
+            locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: oneAndHalfOffset)
             locationLabel.leadingAnchor.constraint(equalTo: $0.leadingAnchor)
             locationLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor)
         }
     }
 }
+
+// MARK: - Constants
+private let avatarSize = 100.0

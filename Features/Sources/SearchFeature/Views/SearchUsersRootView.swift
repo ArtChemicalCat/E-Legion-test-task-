@@ -137,5 +137,3 @@ extension SearchUsersRootView: UITableViewDelegate {
         onSelectUser(selectedID)
     }
 }
-
-extension NSDiffableDataSourceSnapshot: WithValue {}

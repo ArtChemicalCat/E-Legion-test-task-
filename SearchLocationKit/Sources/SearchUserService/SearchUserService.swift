@@ -8,6 +8,7 @@ public protocol SearchUserServiceProtocol {
 }
 
 public final class SearchUserService: SearchUserServiceProtocol {
+    // MARK: - Properties
     private var users = CurrentValueSubject<[User], Error>([])
 
     private let getRandomUsers = RandomUserLoader()
@@ -16,6 +17,7 @@ public final class SearchUserService: SearchUserServiceProtocol {
     
     public init() {}
     
+    // MARK: - Protocol Method
     public func requestUserLocations() -> AnyPublisher<[User], Error> {
         startTimer()
         requestUsers()
@@ -24,6 +26,7 @@ public final class SearchUserService: SearchUserServiceProtocol {
             .eraseToAnyPublisher()
     }
     
+    // MARK: - Private Methods
     private func startTimer() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(
@@ -49,6 +52,7 @@ public final class SearchUserService: SearchUserServiceProtocol {
     }
 }
 
+// MARK: - Coordinate Change Simulation
 private extension Array where Element == User {
     func withRandomlyShiftedCoordinates() -> [User] {
         map {

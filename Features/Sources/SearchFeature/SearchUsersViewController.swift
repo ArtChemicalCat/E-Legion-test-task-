@@ -17,6 +17,8 @@ public final class SearchUsersViewController: UIViewController {
     public init(viewModel: SearchUsersViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        bindToViewModel()
+        viewModel.startRequestingUserLocations()
     }
     
     required init?(coder: NSCoder) { fatalError() }
@@ -28,8 +30,6 @@ public final class SearchUsersViewController: UIViewController {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        bindToViewModel()
-        viewModel.startRequestingUserLocations()
     }
     
     
