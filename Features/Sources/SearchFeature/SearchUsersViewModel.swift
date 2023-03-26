@@ -21,6 +21,8 @@ public final class SearchUsersViewModel {
     @Published private(set) var currentLocation: Coordinate?
     @Published private(set) var locationName: String?
     
+    @Published private(set) var isLoading = true
+    
     @Published private(set) var selectedUser: User?
     @Published private(set) var snapshot = SearchUsersRootView.Snapshot()
         .with { $0.appendSections([.main]) }
@@ -28,10 +30,30 @@ public final class SearchUsersViewModel {
     // MARK: - Initialiser
     public init(userLocationsService: SearchUserServiceProtocol = SearchUserService()) {
         self.userLocationsService = userLocationsService
-        getCurrentLocation()
     }
     
     // MARK: - Methods
+    func startRequestingUserLocations() {
+        getCurrentLocation()
+        
+        userLocationsService
+            .requestUserLocations()
+            .combineLatest($currentLocation.setFailureType(to: Error.self))
+            .sink(
+                receiveCompletion: { print($0) },
+                receiveValue: { [weak self] users, currentLocation in
+                    self?.isLoading = users.isEmpty || currentLocation == nil
+                    self?.users = users.reduce(into: [:]) {
+                        guard $1.id != (self?.selectedUser?.id ?? "") else { return }
+                        $0[$1.id] = $1
+                    }
+                    
+                    self?.updateSnapshot()
+                }
+            )
+            .store(in: &subscriptions)
+    }
+    
     func selectUser(id: User.ID?) {
         switch (id, selectedUser) {
         case let (id?, unselected?):
@@ -87,7 +109,6 @@ public final class SearchUsersViewModel {
             .sink { [weak self] in
                 guard let location = $0 else { return }
                 self?.currentLocation = location
-                self?.startRequestingUserLocations()
             }
             .store(in: &subscriptions)
         
@@ -97,29 +118,8 @@ public final class SearchUsersViewModel {
             .assign(to: &$locationName)
     }
     
-    private func startRequestingUserLocations() {
-        userLocationsService
-            .requestUserLocations()
-            .drop(while: { [unowned self] _ in currentLocation == nil  })
-            .sink(
-                receiveCompletion: {
-                    print($0)
-                },
-                receiveValue: { [weak self] in
-                    self?.users = $0.reduce(into: [:]) {
-                        guard $1.id != (self?.selectedUser?.id ?? "") else { return }
-                        $0[$1.id] = $1
-                    }
-                    
-                    self?.updateSnapshot()
-                }
-            )
-            .store(in: &subscriptions)
-    }
-    
     private func updateSnapshot() {
         guard let currentLocation else { return }
-
         let location = selectedUser?.coordinate ?? currentLocation
         
         snapshot = .init()

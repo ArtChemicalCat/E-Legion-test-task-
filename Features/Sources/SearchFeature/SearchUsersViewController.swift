@@ -1,9 +1,12 @@
 import UIKit
+import CommonUI
 import Combine
 
 public final class SearchUsersViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: SearchUsersViewModel
+    
+    private let loadingViewController = LoadingController()
     private var rootView: SearchUsersRootView {
         view as! SearchUsersRootView
     }
@@ -14,12 +17,22 @@ public final class SearchUsersViewController: UIViewController {
     public init(viewModel: SearchUsersViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        bindToViewModel()
     }
     
     required init?(coder: NSCoder) { fatalError() }
     
     // MARK: - Override
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        bindToViewModel()
+        viewModel.startRequestingUserLocations()
+    }
+    
+    
     public override func loadView() {
         view = SearchUsersRootView(
             dataProvider: { [weak viewModel] in viewModel?.provideData(for: $0) },
@@ -29,6 +42,22 @@ public final class SearchUsersViewController: UIViewController {
     
     // MARK: - Methods
     private func bindToViewModel() {
+        viewModel
+            .$isLoading
+            .removeDuplicates()
+            .print()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                guard let self else { return }
+                switch isLoading {
+                case true:
+                    self.add(self.loadingViewController)
+                case false:
+                    self.loadingViewController.remove()
+                }
+            }
+            .store(in: &subscriptions)
+        
         viewModel
             .$snapshot
             .receive(on: DispatchQueue.main)
