@@ -24,8 +24,11 @@ final class SearchUsersRootView: UIView {
             )
         }
     
+    private let yourLocationView = YourLocationView()
+    
     private lazy var tableView = UITableView()
         .with {
+            $0.showsVerticalScrollIndicator = false
             $0.separatorColor = .clear
             $0.delegate = self
             $0.backgroundColor = .clear
@@ -63,8 +66,11 @@ final class SearchUsersRootView: UIView {
             withDuration: 0.3,
             animations: {
                 self.selectedUserView.alpha = user == nil ? 0 : 1
-                self.selectedHeightConstraint?.isActive = user == nil
-                self.layoutIfNeeded()
+                self.yourLocationView.alpha = user == nil ? 1 : 0
+            },
+            completion: { _ in
+                self.selectedUserView.isHidden = user == nil
+                self.yourLocationView.isHidden = user != nil
             }
         )
         selectedUserView.user = user
@@ -72,6 +78,10 @@ final class SearchUsersRootView: UIView {
     
     func applySnapshot(_ snapshot: Snapshot) {
         dataSource.apply(snapshot)
+    }
+    
+    func setCurrentLocation(name: String?) {
+        yourLocationView.locationName = name
     }
     
     @objc private func unselectUser() {
@@ -100,18 +110,19 @@ final class SearchUsersRootView: UIView {
 
     // MARK: - UI Setup
     private func makeLayout() {
-        addSubviews(selectedUserView, tableView)
-        selectedUserView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        selectedHeightConstraint = selectedUserView.heightAnchor.constraint(equalToConstant: 0)
+        addSubviews(selectedUserView, yourLocationView, tableView)
         
         makeConstraints(inContainer: layoutMarginsGuide) {
+            yourLocationView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+            yourLocationView.leadingAnchor.constraint(equalTo: $0.leadingAnchor)
+            yourLocationView.trailingAnchor.constraint(equalTo: $0.trailingAnchor)
+            yourLocationView.bottomAnchor.constraint(equalTo: tableView.topAnchor)
+
             selectedUserView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
             selectedUserView.leadingAnchor.constraint(equalTo: $0.leadingAnchor)
             selectedUserView.trailingAnchor.constraint(equalTo: $0.trailingAnchor)
+            selectedUserView.bottomAnchor.constraint(equalTo: tableView.topAnchor)
             
-            tableView.topAnchor.constraint(equalTo: selectedUserView.bottomAnchor)
             tableView.leadingAnchor.constraint(equalTo: $0.leadingAnchor)
             tableView.trailingAnchor.constraint(equalTo: $0.trailingAnchor)
             tableView.bottomAnchor.constraint(equalTo: $0.bottomAnchor)
@@ -121,21 +132,6 @@ final class SearchUsersRootView: UIView {
 
 // MARK: - UITableViewDelegate
 extension SearchUsersRootView: UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-//        guard let cell = tableView.cellForRow(at: indexPath) else { return nil }
-//        if cell.isSelected {
-//            tableView.deselectRow(at: indexPath, animated: true)
-//            onSelectUser(nil)
-//            return nil
-//        } else {
-//            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-//            let selectedID = dataSource.itemIdentifier(for: indexPath)
-//            onSelectUser(selectedID)
-//            return indexPath
-//        }
-//
-//    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedID = dataSource.itemIdentifier(for: indexPath)
         onSelectUser(selectedID)

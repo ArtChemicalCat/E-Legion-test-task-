@@ -56,11 +56,11 @@ final class UserCell: UITableViewCell {
     
     private func makeLayout() {
         contentView.addSubviews(roundedRect, avatarImage, nameLabel, distanceLabel)
-        contentView.layoutMargins = .init(top: 12, left: 12, bottom: 12, right: 12)
+        contentView.layoutMargins = .init(top: 12, left: 0, bottom: 12, right: 0)
         let rectContainer = UILayoutGuide()
         contentView.addLayoutGuide(rectContainer)
-
-        roundedRect.pin(to: rectContainer, insets: .init(top: 8, left: 8, bottom: 8, right: 8))
+        roundedRect.pin(to: rectContainer, insets: .init(top: 8, left: 0, bottom: 8, right: 0))
+        
         makeConstraints(inContainer: contentView.layoutMarginsGuide) {
             rectContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
             rectContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
@@ -68,7 +68,7 @@ final class UserCell: UITableViewCell {
             rectContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
 
             avatarImage.topAnchor.constraint(equalTo: roundedRect.topAnchor, constant: 8)
-            avatarImage.leadingAnchor.constraint(equalTo: $0.leadingAnchor)
+            avatarImage.leadingAnchor.constraint(equalTo: roundedRect.leadingAnchor, constant: 8)
             avatarImage.bottomAnchor.constraint(equalTo: roundedRect.bottomAnchor, constant: -8)
                 .with { $0.priority = .defaultHigh }
             

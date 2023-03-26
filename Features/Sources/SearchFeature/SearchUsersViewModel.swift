@@ -7,7 +7,7 @@ import Models
 public final class SearchUsersViewModel {
     // MARK: - Properties
     private let userLocationsService: SearchUserServiceProtocol
-    private let locationManager = LocationManager()
+    private let locationManager = LocationManager.shared
     private var subscriptions = Set<AnyCancellable>()
 
     private let distanceFormatter = LengthFormatter()
@@ -15,9 +15,11 @@ public final class SearchUsersViewModel {
             $0.numberFormatter.maximumFractionDigits = .zero
             $0.numberFormatter.groupingSeparator = " "
         }
-    
-    private var currentLocation: Coordinate?
+
     private var users = [User.ID: User]()
+    
+    @Published private(set) var currentLocation: Coordinate?
+    @Published private(set) var locationName: String?
     
     @Published private(set) var selectedUser: User?
     @Published private(set) var snapshot = SearchUsersRootView.Snapshot()
@@ -26,43 +28,20 @@ public final class SearchUsersViewModel {
     // MARK: - Initialiser
     public init(userLocationsService: SearchUserServiceProtocol = SearchUserService()) {
         self.userLocationsService = userLocationsService
+        getCurrentLocation()
     }
     
     // MARK: - Methods
-    func startRequestingUserLocations() {
-        getCurrentLocation()
-        userLocationsService
-            .requestUserLocations()
-            .sink(
-                receiveCompletion: {
-                    print($0)
-                },
-                receiveValue: { [weak self] in
-                    self?.users = $0.reduce(into: [:]) {
-                        guard $1.id != (self?.selectedUser?.id ?? "") else { return }
-                        $0[$1.id] = $1
-                    }
-                    
-                    self?.updateSnapshot(with: $0)
-                }
-            )
-            .store(in: &subscriptions)
-    }
-    
     func selectUser(id: User.ID?) {
         switch (id, selectedUser) {
         case let (id?, unselected?):
-            snapshot.deleteItems([id])
-            snapshot.appendItems([unselected.id])
             users[unselected.id] = unselected
             selectedUser = users[id]
             users[id] = nil
         case let (id?, nil):
-            snapshot.deleteItems([id])
             selectedUser = users[id]
             users[id] = nil
         case let (nil, unselected?):
-            snapshot.appendItems([unselected.id])
             users[unselected.id] = unselected
             selectedUser = nil
         default: break
@@ -77,6 +56,7 @@ public final class SearchUsersViewModel {
                     .map(\.id),
                 toSection: .main
             )
+            $0.reconfigureItems(users.map(\.key))
         }
     }
     
@@ -104,22 +84,56 @@ public final class SearchUsersViewModel {
         locationManager
             .$currentLocation
             .removeDuplicates()
-            .print()
-            .assign(to: \.currentLocation, on: self)
+            .sink { [weak self] in
+                guard let location = $0 else { return }
+                self?.currentLocation = location
+                self?.startRequestingUserLocations()
+            }
+            .store(in: &subscriptions)
+        
+        locationManager
+            .$locationName
+            .removeDuplicates()
+            .assign(to: &$locationName)
+    }
+    
+    private func startRequestingUserLocations() {
+        userLocationsService
+            .requestUserLocations()
+            .drop(while: { [unowned self] _ in currentLocation == nil  })
+            .sink(
+                receiveCompletion: {
+                    print($0)
+                },
+                receiveValue: { [weak self] in
+                    self?.users = $0.reduce(into: [:]) {
+                        guard $1.id != (self?.selectedUser?.id ?? "") else { return }
+                        $0[$1.id] = $1
+                    }
+                    
+                    self?.updateSnapshot()
+                }
+            )
             .store(in: &subscriptions)
     }
     
-    private func updateSnapshot(with users: [User]) {
-        let presentedUserIDs = snapshot.itemIdentifiers
-        let newUserIDs = Set(
-            users
-                .sortedByDistance(to: selectedUser?.coordinate ?? currentLocation)
-                .filter { $0.id != (selectedUser?.id ?? "") }
-                .map(\.id)
-        ).subtracting(presentedUserIDs)
+    private func updateSnapshot() {
+        guard let currentLocation else { return }
+
+        let location = selectedUser?.coordinate ?? currentLocation
         
-        snapshot.appendItems(Array(newUserIDs), toSection: .main)
-        snapshot.reconfigureItems(presentedUserIDs)
+        snapshot = .init()
+            .with {
+                $0.appendSections([.main])
+                $0.appendItems(
+                    users
+                        .map(\.value)
+                        .sortedByDistance(to: location)
+                        .filter { $0.id != selectedUser?.id ?? "" }
+                        .map(\.id)
+                )
+                $0.reconfigureItems(users.map(\.key))
+            }
     }
 }
 

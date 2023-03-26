@@ -1,4 +1,5 @@
 import CoreLocation
+import Combine
 import Common
 import Models
 
@@ -10,8 +11,11 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
             $0.delegate = self
         }
     
-    @Published
-    public private(set) var currentLocation: Coordinate?
+    private let geocoder = CLGeocoder()
+    
+    @Published public private(set) var currentLocation: Coordinate?
+    @Published public private(set) var locationName: String?
+    
     public static let shared = LocationManager()
     
     // MARK: - Initialiser
@@ -20,12 +24,35 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
         manager.startUpdatingLocation()
     }
     
+    public func locationName(for coordinate: Coordinate) -> AnyPublisher<String?, Never> {
+        let subject = PassthroughSubject<String?, Never>()
+        geocoder.reverseGeocodeLocation(
+            .init(
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude
+            )
+        ) { placemarks, _ in
+            guard let placemark = placemarks?.first else { return }
+            subject.send(placemark.name)
+        }
+        
+        return subject.eraseToAnyPublisher()
+    }
+    
     // MARK: - CLLocationManagerDelegate
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
-        currentLocation = Coordinate(
+        
+        let coordinates = Coordinate(
             longitude: location.coordinate.longitude,
             latitude: location.coordinate.latitude
         )
+        
+        if locationName == nil {
+            locationName(for: coordinates)
+                .assign(to: &$locationName)
+        }
+
+        currentLocation = coordinates
     }
 }

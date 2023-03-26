@@ -14,7 +14,6 @@ public final class SearchUsersViewController: UIViewController {
     public init(viewModel: SearchUsersViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        viewModel.startRequestingUserLocations()
         bindToViewModel()
     }
     
@@ -49,5 +48,13 @@ public final class SearchUsersViewController: UIViewController {
             }
             .store(in: &subscriptions)
         
+        viewModel
+            .$locationName
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.rootView.setCurrentLocation(name: $0)
+            }
+            .store(in: &subscriptions)
     }
 }

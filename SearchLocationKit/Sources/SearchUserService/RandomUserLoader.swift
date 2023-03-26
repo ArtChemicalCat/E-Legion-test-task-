@@ -56,7 +56,7 @@ struct RandomUserLoader {
                         Models.User(
                             name: user.name.full,
                             id: user.id.value ?? "",
-                            avatarURL: user.picture.thumbnail,
+                            avatarURL: user.picture.medium,
                             coordinate: Coordinate(
                                 longitude: Double(user.location.coordinates.longitude) ?? 0,
                                 latitude: Double(user.location.coordinates.latitude) ?? 0
